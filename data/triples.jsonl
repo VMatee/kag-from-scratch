@@ -1,0 +1,12 @@
+{"subject":"GitHub","relation":"hosts","object":"repositories","source":"lesson:github-01"}
+{"subject":"repositories","relation":"contain","object":"pull requests","source":"lesson:github-02"}
+{"subject":"pull requests","relation":"request","object":"code review","source":"lesson:github-03"}
+{"subject":"GitHub","relation":"runs","object":"GitHub Actions","source":"lesson:github-04"}
+{"subject":"GitHub Actions","relation":"executes","object":"workflows","source":"lesson:github-05"}
+{"subject":"workflows","relation":"can automate","object":"tests","source":"lesson:github-06"}
+{"subject":"Git","relation":"records","object":"commits","source":"lesson:git-01"}
+{"subject":"commits","relation":"are stored in","object":"repositories","source":"lesson:git-02"}
+{"subject":"Linux","relation":"provides","object":"shell","source":"lesson:linux-01"}
+{"subject":"shell","relation":"executes","object":"commands","source":"lesson:linux-02"}
+{"subject":"commands","relation":"automate","object":"tests","source":"lesson:linux-03"}
+{"subject":"tests","relation":"support","object":"code review","source":"lesson:collaboration-01"}
