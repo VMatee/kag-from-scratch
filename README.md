@@ -18,7 +18,18 @@ python -m pip install -e '.[dev]'
 python -m pytest -q
 python -m kag_lab "GitHub" "code review" --hops 3
 python -m kag_lab "Git" "pull requests" --hops 2
+python -m kag_lab "GitHub" "code review" --hops 3 --stats
+python -m kag_lab.evaluate
 ```
+
+## Explicit graph algorithms and evidence verification
+
+The graph search now exposes bounded BFS expansion counts and queue size,
+plus an **independent path verifier** that checks every relationship and
+source ID against the stored triples. An illustrative evaluation exercises
+both supported and unsupported relationship questions.
+
+See [the graph traversal and verification guide](docs/implementation.md).
 
 ## Core idea
 
