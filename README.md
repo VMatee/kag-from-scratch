@@ -2,10 +2,7 @@
 
 [![Tests](https://github.com/VMatee/kag-from-scratch/actions/workflows/tests.yml/badge.svg)](https://github.com/VMatee/kag-from-scratch/actions/workflows/tests.yml)
 
-Learn **knowledge-graph-augmented answer construction** from explicit subject–
-relation–object triples. Starting with a curated JSONL knowledge graph, this
-implementation performs bounded multi-hop search and returns inspectable
-relationship paths with source provenance. It uses only the Python standard
+This repository implements **source-aware graph traversal** over explicit subject–relation–object triples. A curated JSONL graph is indexed into adjacency lists and queried with bounded breadth-first search. Every returned path can be checked against its original edge and source identifiers. It uses only the Python standard
 library and does **not** train an LLM.
 
 Here **KAG** means *knowledge-graph-augmented generation* in a general educational
@@ -21,6 +18,18 @@ python -m kag_lab "Git" "pull requests" --hops 2
 python -m kag_lab "GitHub" "code review" --hops 3 --stats
 python -m kag_lab.evaluate
 ```
+
+## Mathematical model
+
+The knowledge graph is a directed, labeled multigraph $G=(V,E)$. A returned path must contain a sequence of real source-labeled edges, preserve endpoint continuity, and respect a maximum hop count:
+
+$
+P=(e_1,\ldots,e_h),\qquad e_i\in E,\qquad 1\le h\le H.
+$
+
+The mathematical walkthrough explains BFS queue states, path validation, an actual three-hop query, and why enumerating multiple paths can become expensive even when a graph is small.
+
+**[Read the graph-theory and verification walkthrough →](docs/mathematics.md)**
 
 ## Explicit graph algorithms and evidence verification
 
@@ -59,7 +68,7 @@ source documents --> curated triples --> adjacency index
 **Reading:** Pan et al. (2023), *Unifying Large Language Models and Knowledge Graphs*;
 Edge et al. (2024), *From Local to Global: A Graph RAG Approach to Query-Focused Summarization*.
 
-## Interactive notebook
+## Reproducible notebook
 
 Open [the step-by-step notebook](notebooks/01_walkthrough.ipynb) in Jupyter after installing this repository with `python -m pip install -e ".[dev]"`.
 
