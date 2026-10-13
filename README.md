@@ -23,9 +23,9 @@ python -m kag_lab.evaluate
 
 The knowledge graph is a directed, labeled multigraph $G=(V,E)$. A returned path must contain a sequence of real source-labeled edges, preserve endpoint continuity, and respect a maximum hop count:
 
-$
+```math
 P=(e_1,\ldots,e_h),\qquad e_i\in E,\qquad 1\le h\le H.
-$
+```
 
 The mathematical walkthrough explains BFS queue states, path validation, an actual three-hop query, and why enumerating multiple paths can become expensive even when a graph is small.
 

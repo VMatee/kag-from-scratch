@@ -10,15 +10,15 @@ The word *reasoning* here refers to following and checking graph paths. No langu
 
 Let $G=(V,E)$ be a directed graph. Each edge carries not only a destination but also a relation and a source label:
 
-$$
+```math
 e=(u,r,v,s),\qquad u,v\in V.
-$$
+```
 
 The symbols represent a subject $u$, a relation $r$, an object $v$, and a source identifier $s$. For example:
 
-$$
+```math
 (\mathrm{GitHub},\mathrm{hosts},\mathrm{repositories},\mathrm{lesson{:}github\text{-}01})
-$$
+```
 
 records that the source label **lesson:github-01** supports the relationship **GitHub hosts repositories** *within the curated sample graph*. A source label in this dataset is an illustrative identifier; it is not an independent citation proving the real-world assertion.
 
@@ -30,10 +30,10 @@ Before indexing, the [graph module](../src/kag_lab/graph.py) normalizes each ent
 
 For every subject entity $u$, the implementation builds a list of its outgoing edges:
 
-$$
-\operatorname{Adj}(u)
-=\{e\in E:\operatorname{subject}(e)=u\}.
-$$
+```math
+\mathrm{Adj}(u)
+=\{e\in E:\mathrm{subject}(e)=u\}.
+```
 
 This is an adjacency-list representation. It avoids searching the entire graph every time the traversal reaches a vertex: if the current entity is **repositories**, only the edges leaving **repositories** need to be examined.
 
@@ -43,25 +43,25 @@ The outgoing edges are sorted by normalized destination, relation and source. Th
 
 Suppose a query asks how a start entity $v_0$ is connected to a destination $v_h$. A candidate explanation is a sequence of edges
 
-$$
+```math
 P=(e_1,e_2,\ldots,e_h).
-$$
+```
 
 For this to be a valid directed path, its edges must join continuously:
 
-$$
-\operatorname{subject}(e_1)=v_0,
-$$
+```math
+\mathrm{subject}(e_1)=v_0,
+```
 
-$$
-\operatorname{object}(e_i)
-=\operatorname{subject}(e_{i+1})
+```math
+\mathrm{object}(e_i)
+=\mathrm{subject}(e_{i+1})
 \quad\text{for }i=1,\ldots,h-1,
-$$
+```
 
-$$
-\operatorname{object}(e_h)=v_{\mathrm{target}}.
-$$
+```math
+\mathrm{object}(e_h)=v_{\mathrm{target}}.
+```
 
 Entity comparisons in the implementation use their normalized versions. An additional constraint prevents a path from revisiting a previously visited entity. The query also sets a maximum hop budget $H$, so only $1\le h\le H$ is permitted.
 
@@ -75,7 +75,7 @@ The bundled [triples.jsonl](../data/triples.jsonl) contains these edges:
 
 The resulting path is
 
-$$
+```math
 \mathrm{GitHub}
 \xrightarrow{\mathrm{hosts}}
 \mathrm{repositories}
@@ -83,7 +83,7 @@ $$
 \mathrm{pull\ requests}
 \xrightarrow{\mathrm{request}}
 \mathrm{code\ review}.
-$$
+```
 
 Its length is three. Therefore, searching with a hop budget of 3 can return this explanation, whereas a budget of 2 cannot return this particular three-edge chain.
 
@@ -93,9 +93,9 @@ Each edge also retains its source label. This is the difference between returnin
 
 To discover short relationship chains before long ones, the [search routine](../src/kag_lab/graph.py) uses **breadth-first search (BFS)**. A queue entry contains three pieces of information:
 
-$$
+```math
 \mathrm{state}=(v,P,S),
-$$
+```
 
 where $v$ is the current entity, $P$ is the path accumulated so far, and $S$ is the set of entities visited *on that path*.
 
@@ -113,10 +113,10 @@ A first-in, first-out queue explores shorter paths before deeper ones. The imple
 
 Standard single-visit BFS has a familiar $O(|V|+|E|)$ bound for reachability. **This implementation searches for multiple simple paths**, however, and stores a different visited set for each partial path. In the worst case, with branching factor $b$ and depth limit $H$, the number of explored path prefixes can grow on the order of
 
-$$
+```math
 1+b+b^2+\cdots+b^{H}
 =O(b^H)\quad\text{for }b>1.
-$$
+```
 
 The hop and path budgets are therefore meaningful resource controls. The command's **--stats** mode reports the observed queue peak, expanded states and examined edges; no unmeasured runtime or scalability benchmark is claimed.
 
@@ -124,8 +124,8 @@ The hop and path budgets are therefore meaningful resource controls. The command
 
 Generating a path is not enough. A graph search bug, or a modified result object, could return a relationship that never existed. The [verify_path](../src/kag_lab/graph.py) function checks a candidate path independently from the search:
 
-$$
-\operatorname{valid}(P)
+```math
+\mathrm{valid}(P)
 =
 \mathbf{1}\!\left[
 \begin{array}{l}
@@ -136,7 +136,7 @@ e_i\in E\ \text{for every }i,\\
 \text{the final endpoint equals the requested target}
 \end{array}
 \right].
-$$
+```
 
 Membership checks use the **entire edge tuple**, including the relation and the source string. Replacing **lesson:github-03** with a fictitious source makes that edge fail validation, even if its subject and object are unchanged.
 
@@ -146,11 +146,11 @@ This is a useful form of provenance checking, but it has a clear boundary. The v
 
 The [evaluation script](../src/kag_lab/evaluate.py) runs a short handcrafted set of positive and negative relationship queries. A simple agreement measure is
 
-$$
+```math
 \mathrm{accuracy}
 =\frac{\text{number of queries matching the expected path-existence label}}
 {\text{number of evaluation queries}}.
-$$
+```
 
 An expected positive example is correct only when at least one path is found and its returned edges pass verification. An expected negative example is correct when no path is returned. This checks the tiny curated graph; it is not a benchmark of automatic knowledge extraction, factual reasoning or LLM answer quality.
 
